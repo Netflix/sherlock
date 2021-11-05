@@ -39,11 +39,11 @@ incorporating state-of-the-art ensemble machine learning (van der Laan,
 Polley, and Hubbard 2007; Coyle et al. 2021) in the estimation
 procedure.
 
-For further background and details on using `sherlock`, see the package
-vignette. For an overview of the underlying statistical methodology, see
-our [conference manuscript](https://arxiv.org/abs/2111.01223) (Hejazi,
-Zheng, and Anand 2021) from [CODE @
-MIT 2021](https://ide.mit.edu/events/2021-conference-on-digital-experimentation-mit-codemit/).
+For background and details on using `sherlock`, see the package
+vignette. For an overview of the statistical methodology, see our
+[conference manuscript](https://arxiv.org/abs/2111.01223) (Hejazi,
+Zheng, and Anand 2021) from [CODE @ MIT
+2021](https://ide.mit.edu/events/2021-conference-on-digital-experimentation-mit-codemit/).
 
 -----
 
@@ -56,13 +56,15 @@ Install the *most recent version* from the `master` branch on GitHub via
 remotes::install_github("Netflix/sherlock")
 ```
 
-Eventually, the package will make its way to
-[CRAN](https://CRAN.R-project.org). At that point, a stable version may
-be installed via
+<!--
+Eventually, the package will make its way to [CRAN](https://CRAN.R-project.org).
+At that point, a stable version may be installed via
 
-``` r
+
+```r
 install.packages("sherlock")
 ```
+-->
 
 -----
 
@@ -93,7 +95,7 @@ After using the `sherlock` R package, please cite the following:
         learning in large-scale digital experiments},
       year = {2021},
       journal = {Conference on Digital Experimentation at {MIT}},
-      volume = {8\textsuperscript{th} annual},
+      volume = {(8\textsuperscript{th} annual)},
       publisher = {MIT Press},
       url = {https://arxiv.org/abs/2111.01223}
     }
@@ -127,7 +129,7 @@ Super Learning*. <https://doi.org/10.5281/zenodo.1342293>.
 Hejazi, Nima S, Wenjing Zheng, and Sathya Anand. 2021. “A Framework for
 Causal Segmentation Analysis with Machine Learning in Large-Scale
 Digital Experiments.” *Conference on Digital Experimentation at MIT*
-8<sup>th</sup> annual. <https://arxiv.org/abs/2111.01223>.
+(8<sup>th</sup> annual). <https://arxiv.org/abs/2111.01223>.
 
 </div>
 
