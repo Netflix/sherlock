@@ -14,8 +14,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 <!-- badges: end -->
 
-> Causal Machine Learning for Population Segmentation Discovery and
-> Analysis
+> Causal Machine Learning for Population Segment Discovery and Analysis
 
 **Authors:** [Nima Hejazi](https://nimahejazi.org) and [Wenjing
 Zheng](https://www.linkedin.com/in/wenjing-zheng/)
@@ -42,8 +41,8 @@ procedure.
 
 For further background and details on using `sherlock`, see the package
 vignette. For an overview of the underlying statistical methodology, see
-our [conference manuscript](https://arxiv.org/abs/2111.01223) from [CODE
-@
+our [conference manuscript](https://arxiv.org/abs/2111.01223) (Hejazi,
+Zheng, and Anand 2021) from [CODE @
 MIT 2021](https://ide.mit.edu/events/2021-conference-on-digital-experimentation-mit-codemit/).
 
 -----
@@ -81,11 +80,22 @@ After using the `sherlock` R package, please cite the following:
 ``` 
     @software{netflix2021sherlock,
       author={Hejazi, Nima S and Zheng, Wenjing and {Netflix, Inc.}},
-      title = {{sherlock}: Causal machine learning for population
-        segmentation discovery and analysis},
+      title = {{sherlock}: Causal machine learning for segment discovery
+        and analysis},
       year  = {2021},
-      note = {R package version 0.1.4},
+      note = {R package version 0.2.0},
       url = {https://github.com/Netflix/sherlock}
+    }
+
+    @article{hejazi2021framework,
+      author = {Hejazi, Nima S and Zheng, Wenjing and Anand, Sathya},
+      title = {A framework for causal segmentation analysis with machine
+        learning in large-scale digital experiments},
+      year = {2021},
+      journal = {Conference on Digital Experimentation at {MIT}},
+      volume = {8\textsuperscript{th} annual},
+      publisher = {MIT Press},
+      url = {https://arxiv.org/abs/2111.01223}
     }
 ```
 
@@ -109,6 +119,15 @@ for details.
 Coyle, Jeremy R, Nima S Hejazi, Ivana Malenica, Rachael V Phillips, and
 Oleg Sofrygin. 2021. *sl3: Modern Pipelines for Machine Learning and
 Super Learning*. <https://doi.org/10.5281/zenodo.1342293>.
+
+</div>
+
+<div id="ref-hejazi2021framework">
+
+Hejazi, Nima S, Wenjing Zheng, and Sathya Anand. 2021. “A Framework for
+Causal Segmentation Analysis with Machine Learning in Large-Scale
+Digital Experiments.” *Conference on Digital Experimentation at MIT*
+8<sup>th</sup> annual. <https://arxiv.org/abs/2111.01223>.
 
 </div>
 
