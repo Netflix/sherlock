@@ -90,6 +90,16 @@ remotes::install_github("tlverse/sl3@devel",  dependencies = FALSE)
 the current version, `sl3` has ~40 of the most popular machine learning methods
 to choose from as base learners.
 
+When `sherlock` package is available on CRAN, it can be installed via:
+```{r install_cran, eval = FALSE}
+install.packages("sherlock")
+```
+
+Alternatively, it can be installed from the public `sherlock` repo on Netflix Github:
+```{r install_gh, eval=FALSE}
+remotes::install_github("Netflix/sherlock")
+```
+
 Another option is to download the package from GitHub and install the package
 tarball locally.
 
