@@ -1,0 +1,664 @@
+---
+title: "`sherlock`: Causal Machine Learning for Segment Discovery"
+author: "[Nima Hejazi](https://nimahejazi.org) and [Wenjing Zheng](https://www.linkedin.com/in/wenjing-zheng)"
+output:
+  rmarkdown::html_vignette:
+    number_sections: true
+bibliography: ../inst/REFERENCES.bib
+vignette: >
+  %\VignetteIndexEntry{sherlock_quick_start_nflx}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+collapse = TRUE,
+eval = TRUE,
+comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+```{r setup, message=FALSE,echo=FALSE,warning=FALSE,eval=TRUE}
+library(conflicted)
+library(data.table)
+library(tibble)
+library(dplyr)
+conflict_prefer("filter", "dplyr")
+```
+
+# Overview of `sherlock`
+
+## What is it for?
+
+`sherlock` allows us to use data from A/B tests or observational and quasi
+experiments, to discover which subgroups or segments of users would benefit from
+(or be harmed by) a given treatment of interest. The criterion for benefit or
+harm could be either absolute or subject to some cost constraints.
+<!--
+Sometimes, we may also be interested in quantifying the maximal treatment
+effect heterogeneity (HTE) across the subgroups.
+-->
+
+In these *Causal Segment Discovery* problems, we are given a set of **segment
+dimensions/covariates** that are not affected by the treatment (e.g. {country,
+device}). These are often a subset of the baseline covariates that are used to
+adjust for treatment effect confounding (in the case of non-AB data) and/or to
+reduce estimation variance. A **segment or subgroup** is a particular
+realization of the segment dimensions (e.g. {country=US, device=iphone12}). Our
+task is to learn the treatment effect heterogeneity across the segments, and
+which segments would satisfy a given treatment benefit criterion. The causality
+aspect lies in that the criterion is a function of the causal treatment effects
+on the segments, such as the **Conditional Average Treatment Effect (CATE)** on
+a segment. This task would result in a **segmentation (or partition)**  of the
+population, into segments that should receive treatment vs those that should
+not.
+<!-- Or, in the case of quantifying a maximal HTE, it would partition the
+population into two sets of segments, across which the HTE is  maximized. -->
+
+`sherlock` implements a modular, doubly robust machine learning framework for
+Causal Segment Discovery (first proposed by @vanderweele19, @vdL15, @Luedtke16a
+and @Luedtke16b). This package has the following features:
+
+* It allows the user to use any machine-learning or parametric methods to get
+robust and efficient estimates (and the associated standard errors) of the
+CATE as a function of the segments. This paves the way for applications where
+we have high cardinality in the segment dimensions, and/or where we have a
+large number of covariates to control for treatment effect confounding in
+non-AB data.
+* It allows the user to input an optimality criterion, which will be used to
+decide which segments should receive treatment. The criterion could be an
+absolute threshold of the CATE on a segment, or be based on capping treatment
+cost while maximizing treatment effect.
+<!-- It also allows a user to learn a maximal HTE across the segments, based
+on a two-set partition of segments that would maximize the HTE between the
+two sets. -->
+* For a learned segmentation of the population, `sherlock` also provides double
+robust effect measures to assess how well this segmentation achieves the
+intended criterion.
+
+## Installing the package
+
+Before installing `sherlock`, please make sure that you have the latest version
+of [`sl3`](https://github.com/tlverse/sl3), which is the workhorse of our model
+estimations. You can do so via
+```{r install_sl3, eval = FALSE}
+remotes::install_github("tlverse/sl3@devel",  dependencies = FALSE)
+```
+`sl3` implements an ensemble machine learning framework called Super Learner. At
+the current version, `sl3` has ~40 of the most popular machine learning methods
+to choose from as base learners.
+
+Another option is to download the package from GitHub and install the package
+tarball locally.
+
+Once installed, `sherlock` and `sl3` can be loaded via
+```{r load_pkgs, message=FALSE}
+library(sl3)
+library(sherlock)
+```
+
+# How to use `sherlock`
+
+Overall, there are 3 main modules in this Causal Segment Discovery Framework:
+
+1. Estimate CATE and its standard error, for each segment. This provides a
+   summary of the Heterogeneous Treatment Effects (HTE) across the segments.
+   (`sherlock_calculate` function)
+2. Decide which segments should receive treatment (and which should not), based
+   on a segment discovery criterion. (`watson_segment` function)
+3. Evaluate the effectiveness of this segmentation. (`mycroft_assess` function)
+
+For the classes of problems addressed in this framework, step 1 would be the
+same regardless of the segmentation criterion, since it learns the effect of the
+treatment on each segment. Steps 2 and 3 depend on the segmentation criterion
+and what would be an appropriate effectiveness evaluation. Hence, step 1 only
+needs to be run once. After that, we can run different segmentation criteria and
+corresponding effectiveness evaluations.
+
+## Step 0. Data structure {-}
+
+We illustrate the steps with a synthetic data example. Suppose we want to learn
+whether a new UI treatment would have a differential impact on segments of our
+users, where segments are defined by the number of devices they have and their
+tenure.
+```{r load_data, message = FALSE, warning = FALSE}
+data(data_example)
+head(data_example)
+```
+Here the column `treatment` represents the treatment of interest $A$, the column
+`outcome_viewing` represents the outcome of interest $Y$. All the other columns
+make up the baseline covariates $W$, which we shall use to control for treatment
+effect confounding and to reduce variance. Let $V$={`num_devices`, `is_p2plus`}
+be our segment dimensions of interest. Note that we always have $V\subseteq W$.
+If the data has repeated measures on the independent units, we would have an
+additional `id` column, where rows pertaining to the same unit should have the
+same `id` value.
+
+At this point, we make no assumptions on whether this data is from AB-tests.
+That assumption only comes in later when we either provide the treatment
+allocation rate (if AB test) or an estimation method to fit the treatment
+propensity (if non-AB).
+
+## Step 1. Estimate the Conditional Average Treatment Effect on each segment {-}
+
+For a segment $V=v$, $CATE(v) = E[E(Y|A=1,W)-E(Y|A=0,W)|V=v)]$ is the
+**Conditional Average Treatment Effect (CATE)** on this segment. It captures the
+average difference in outcome, if users in this segment had received treatment
+$A=1$ vs control $A=0$. We want to estimate $CATE(v)$ across all the segments
+$v$.
+
+This task can be modularized in terms of estimating the nuisance parameters:
+
+- outcome regression E(Y|A,W)
+- the propensity score (if non-AB) p(A|W)
+- the regression CATE(v) = E[ E(Y|A=1,W)-E(Y|A=0,W)|V=v]
+
+Each nuisance parameter can be estimated using ML methods specified by the user,
+or selected via a cross-validation procedure. These are implemented via `sl3`.
+
+### Step 1.1 Specifying the machine learners {-}
+
+As mentioned above, we use [`sl3`](https://github.com/tlverse/sl3) to implement
+the machine learning methods to estimate the propensity score, the outcome model
+and the CATE. When given one base learner (one machine learning method spec),
+`sl3` will fit this learner as if using the algo's package directly. But when
+given multiple base learners (different methods and different tuning specs),
+`sl3` will fit the best linear combination of these, wherein "best" is chosen by
+a cross-validated risk. Currently, there are ~30 machine learners methods
+available for binary dependent variables, and ~40 available for continuous
+dependent variables.
+
+```{r supported machine learners in sl3}
+##### list all the supported ML algos in sl3
+sl3_list_learners("binomial") ## ML algos for binary dependent variables
+sl3_list_learners("continuous") ## ML algos for continuous dependent variables
+```
+Documentation for the tuning parameters of each learner can be found in [`sl3`
+Learners
+Reference](https://tlverse.org/sl3/reference/index.html#section-sl-learners).
+Use `?Lrnr...` to see which model defaults are used. For now, we show a few
+examples of base learner specifications:
+```{r examples of learner spec}
+# a random forest base learner implemented by `ranger` package
+lrn_ranger100 <- Lrnr_ranger$new(num.trees = 100)
+
+# xgboost base learners
+xgb_fast <- Lrnr_xgboost$new() # defaults from `xgboost` package (nrounds=20)
+xgb_50 <- Lrnr_xgboost$new(nrounds = 50, max_depth = 6, eta = 0.001)
+
+# For learners that require a formula specification, the instantiated learner
+# uses main terms derived from the input data, additional interaction
+# terms need to be specified separately when calling sherlock:
+lrn_glm <- Lrnr_glm$new()
+lrn_lasso <- Lrnr_glmnet$new() # default is alpha=1, which is the LASSO
+lrn_ridge_interaction <- Lrnr_glmnet$new(alpha = 0)
+lrn_enet.5_interaction <- Lrnr_glmnet$new(alpha = 0.5)
+
+### example: additional interaction terms of treatment with segment dimensions
+or_interactions <- list(c("treatment", "num_devices"),
+                        c("treatment", "is_p2plus"),
+                        c("treatment", "num_devices", "is_p2plus"))
+```
+
+Next, we specify which learners we want to use to estimate the outcome model,
+propensity score, and the final CATE parameter. At this point, we do not need
+to specify the dependent and independent variables, as that will be handled
+inside `sherlock` methods. For example, we can choose:
+```{r nuisance_learners}
+##### for each nuisance parameter, we illustrate one way of using sl3
+
+# to estimate the propensity score p(A|W):
+# for example, we use only one learner. Here sl3 will just directly call
+# xgboost to fit according to tuning params
+ps_learner_spec <- xgb_50
+# if data is from a AB test, where treatment is allocated at a fixed rate p,
+# say, p = 0.5, then we can also specify:
+# ps_learner <- 0.5
+
+# to estimate the outcome regression E(Y|A,W):
+# for example, we use a linear ensemble with 3 base learners:
+#  {ranger, xgboost, lasso with the specified interactions}.
+or_learner_spec <- list(lrn_ranger100, xgb_fast,
+                        list(or_interactions, lrn_lasso))
+# if we are not using models that specify the interaction terms, then we can
+# instantiate the ensemble models directly. For example:
+# or_learner_spec <- Lrnr_sl$new(learners = list(lrn_ranger100,xgb_fast))
+
+# to estimate CATE(V) = E( E(Y|1,W)-E(Y|0,W) | V):
+# for example, we use cross-validation to select best among ranger and xgboost
+cate_learner_spec <- Lrnr_sl$new(
+  learners = list(lrn_ranger100, xgb_fast),
+  metalearner = Lrnr_cv_selector$new()
+)
+```
+
+#### Step 1.2 Using the learners to obtain double robust estimation of CATE {-}
+
+Now, we can call the function `sherlock_calculate` with these ml methods  to
+calculate the CATE on the segments. The argument `baseline` specifies all the
+covariates $W$ we want to use to adjust for confounding and/or to increase
+estimation efficiency. The `segment_by` argument lists the segment dimensions
+$V$ along which we want to segment users. It must be a subset of `baseline`. The
+arguments `ps_learner`, `or_learner` and `cate_learner` take the specified
+machine learning methods or parametric models (examples shown above), for the
+propensity score, outcome regression and CATE estimates, respectively. If
+instead of using an ensemble learner, we wish to only select the best among the
+list of candidate learners for each nuisance parameter, we can specify the
+argument `use_cv_selector=TRUE` (default is `FALSE`) in `sherlok_calculate`. The
+dependent and independent variables used in each learner will be based on the
+variable groups we specified and the nuisance parameter being estimated.
+```{r estimate_CATE}
+sherlock_results <- sherlock_calculate(
+  data_from_case = data_example,
+  baseline = c("num_devices", "is_p2plus", "is_newmarket", "baseline_ltv",
+               "baseline_viewing"),
+  exposure = "treatment",
+  outcome = "outcome_viewing",
+  segment_by = c("num_devices", "is_p2plus"),
+  cv_folds = 5L,
+  ps_learner = ps_learner_spec,
+  or_learner = or_learner_spec,
+  cate_learner = cate_learner_spec
+)
+print(sherlock_results)
+```
+
+We can visualize the CATE estimation results from `sherlock_calculate` as follows:
+```{r plot_cate, eval = FALSE}
+plot(sherlock_results, plot_type = "cate")
+```
+
+`sherlock_calculate` returns an object of class `sherlock`, which is also a
+`data.table` object representing the input data set, with the estimated
+treatment probabilities, outcome estimates and CATE estimates attached to it.
+The default print out (or a call `attr(sherlock_results,'summary')` ) will
+provide for each segment, the segment proportion in the population, its
+estimated CATE and associated confidence intervals and standard error. This
+readily provides a view of the HTE across the segments.
+
+## Steps 2 and 3: Finding Segments to Treat and Evaluate Effectiveness of the Segmentation. {-}
+
+In step 1, we obtained a summary of the HTE by estimating the CATE across the
+segments. Now, we will consider a few examples of finding the optimal segments
+to treat based on a segment discovery criterion. We do not need to rerun
+`sherlock_calculate` when we want to try a new criterion, unless the data is
+changed (see example 3).
+
+### Example 1: Finding segments that would benefit from treatment, according to a fixed benefit threshold {-}
+
+#### Step 2. Finding segments to treat based on benefit threshold {-}
+
+Suppose we want to find all the segments that would benefit from the treatment,
+where "benefit" is determined by having $CATE(v) >$ `threshold`, for some
+user-specified threshold. We can do so by calling the `watson_segment` function,
+with the segmentation function `cost_threshold()` and the desired benefit
+threshold. In this example, `threshold=0` means that we consider a segment with
+$CATE(v)>0$ to be benefiting from treatment, and hence "should be treated". The
+argument `type=inferential` specifies that the determination of $CATE(v) >$
+`threshold` is based on an upper-tail hypothesis test with the standard errors
+of the CATE estimates and multiple comparison adjustments. By contrast,
+`type=analytical` means that the determination is only based on the point
+estimate $CATE(v)$, without hypothesis testing. When the sizes of some segments
+are very small, we suggest either using `type=analytical` as the hypothesis
+testing will be inaccurate or refactoring the segment dimensions to allow for
+bigger segments.
+
+```{r finding segments}
+sherlock_results <- watson_segment(
+  sherlock_results,
+  segment_fun = cost_threshold,
+  threshold = 0,
+  type = "inferential"
+)
+print(sherlock_results)
+```
+
+We can visualize the treatment decisions from `watson_segment` as follows:
+```{r plot_treatments_threshold, eval=FALSE}
+plot(sherlock_results, plot_type = "treatment_decisions")
+```
+
+The `watson_segment` function attaches to each individual the recommended
+treatment rule of their segment: `rule=1` means "should receive treatment",
+`rule=0` means "should not receive treatment". The default print out (or a call
+`attr(sherlock_results, "summary")` ) provides a summary of the segment
+discovery. For example: segment `{num_devices=1, is_p2plus=1}` should receive
+treatment (`rule=1`) because we can conclude that $CATE(v) > 0$ based on the
+p-values (adjusted for multiple comparisons). Similarly, `{num_devices=2,
+is_p2plus=0}` should not receive treatment.
+
+#### Step 3. Assessing the effectiveness of the segmentation. {-}
+
+Step 2 used the CATE estimates to determine which segments should be treated.
+But how effective is such segmentation in maximizing outcomes, compared to
+global one-size-fits-all strategies? Or what are the treatment effects on all
+segments that should receive treatment vs those that should not? We can assess
+these using the `mycroft_assess` function, which provides double-robust
+estimation of the Optimal Treatment Effects (`param_type = "ote"`) or
+Heterogeneous Average Treatment Effects ((`param_type = "hte"`).
+
+```{r assess ote}
+# Optimal Treatment Effects (OTE) from rule-based treatment"
+ote_example <- mycroft_assess(
+  sherlock_results,
+  param_type = "ote"
+)
+
+# friendly print out
+print(ote_example)
+
+# tabular print out
+ote_example %>%
+  as.data.table()
+```
+The first 3 "Counterfactual Mean Outcome" parameters are the counterfactual mean
+outcome under the global 'all get treatment' strategy, 'all get control'
+strategy, and the targeted strategy of 'treat based on segment rule', where the
+segment rule was learned in step 2 using `watson_segment`. The last two "optimal
+treatment effect" parameters are the differences in outcome of the rule-based
+strategy vs the global 'treat  all'  and 'control all'  strategies,
+respectively. These allow us to evaluate the gain in implementing the
+segment-rule based strategy, compared to a more convenient global strategy.
+
+```{r assess hte}
+## "Heterogeneous Treatment Effect (HTE) Based on Segmentation"
+hte_example <- mycroft_assess(
+  sherlock_results,
+  param_type = "hte"
+)
+print(hte_example)
+```
+The first 3 "Average Treatment Effect" parameters evaluate the average treatment
+effect (treat-all vs control-all), on the whole population, on the segments
+where treatment is recommended  (`rule=1`), and on the segments where treatment
+is not recommended  (`rule=0`). "Difference in ATE" parameter is the difference
+in Average Treatment Effect between the two segment groups (ATE on `rule==1`
+group vs ATE on `rule=0` group).
+
+### Example 2: Finding segments that should receive treatment, if we can only treat a fixed percent of the population {-}
+
+Consider the use case where treating each unit incurs a fixed cost, and as a
+result we are only able to treat at most $(100\times q)\%$ of the population,
+for a given rate $q\in (0,1)$. Our goal is to find segments that should receive
+treatment, but subject to this population-level constraint. Implicit in this use
+case is that the treatment will be beneficial for at least $(100\times q)\%$ of
+the population. Otherwise the constraint doesn't apply and we are back in the
+use case of example 1.
+
+This use case can be formulated in terms of the *knapsack problem*, where the
+goal is find the set of segments $T\subseteq \{v: CATE(v) > 0\}$ that maximizes
+$\sum_{v\in T} CATE(v)$, subject to the constraint $\sum_{v\in T} p(v) \leq q$.
+Our package uses the `knapsack` implementation in
+[`adagio`](https://CRAN.R-project.org/package=adagio).
+
+We already obtained CATE for each segment in step 1. So now, in step 2, we use
+the segmentation function `cost_knapsack()` instead. This function uses the
+argument `budget` to specify the treatment budget constraint $q$. Suppose we
+have a budget to treat only 20% of the population: `budget=0.2`. The argument
+`type=inferential` specifies that the determination of $CATE(v) > 0$ should be
+based on hypothesis testing with multiple comparison adjustments. If
+`type=analytic`, then only the determination is only based on the point
+estimates. Recall that we had run `watson_segment` once already using
+`segment_fun=cost_threshold` in example 1. Now, this new segmentation will
+overwrite the previous one.
+```{r }
+sherlock_results <- watson_segment(
+  sherlock_results,
+  segment_fun = cost_knapsack,
+  budget = 0.2,
+  type = "inferential"
+)
+print(sherlock_results)
+```
+
+As before, we can visualize the treatment decisions from `watson_segment` as follows:
+```{r plot_treatments_knapsack, eval=FALSE}
+plot(sherlock_results, plot_type = "treatment_decisions")
+```
+
+Similar to the previous example, `rule=1` means that the segment should receive
+treatment, `rule=0` otherwise. Compared to the optimality criterion in example 1
+($CATE(v)>0$), we have fewer "treat" segments now. The column
+`segment_proportion` records $p(v)$, the segment's share of the population. We
+can check that the chosen "treat" segments make up 19.18% of the population,
+thus satisfying the constraint of $\sum_{v\in T} p(v) \leq 0.2$:
+```{r check popn cap}
+attr(sherlock_results, "summary") %>%
+  filter(rule == 1)
+attr(sherlock_results, "summary") %>%
+  filter(rule == 1) %>%
+  pull(segment_proportion) %>%
+  sum()
+```
+
+Since the constraint has prevented us from choosing all the segments that would
+benefit from treatment, we should expect that the resulting segment-rule based
+strategy will perform less optimally than the one we learned in example 1.
+Indeed:
+```{r }
+mycroft_assess(
+  sherlock_results,
+  param_type = "ote"
+) %>% print
+```
+The "Counterfactual Mean Outcome If Treat Based on Segment Rule" in this example
+is less than the corresponding one in example 1.
+
+### Example 3: Finding segments that should receive treatment, if we need to cap the average treatment cost per unit {-}
+
+Now, we consider a more general use case where treating each unit incurs a cost
+that depends on its segment and other unit-level factors. In finding which
+segments should receive treatment and which should receive control, we want to
+ensure that the resulting average cost per unit across the population is capped.
+Let $Cost(v)$ be the average cost of treating a unit in segment $V=v$. Then,
+$\sum_{v} Cost(v)p(v)$ is the average cost per population unit, if we treat
+everyone (all segments). Similarly, $\sum_{v \in T} Cost(v)p(v)$ is the average
+cost per population unit, if we only treat some subset of segments $T$.
+
+This use case can again be formulated in terms of the *knapsack problem*, where
+the goal is find the set of segments $T\subseteq \{v: CATE(v) > 0\}$ that
+maximizes $\sum_{v\in T} CATE(v)$, subject to the constraint $\sum_{v\in T}
+Cost(v) p(v) \leq \text{budget}$. The previous example is a special case with a
+fixed cost $Cost(v)=c$ for all segments.
+
+The data structure and calls to `sherlock_calculate` are slightly different in
+this example. The data should have a column for the treatment cost for a unit.
+```{r data with cost}
+data(data_example_with_cost)
+head(data_example_with_cost) %>%
+  as.data.frame() %>%
+  print()
+```
+When calling the `sherlock_calculate` function, we need to add the argument
+`treatment_cost` to specify the column for the treatment cost in the data.
+```{r estimate CATE example 3}
+sherlock_results <- sherlock_calculate(
+  data_from_case = data_example_with_cost,
+  baseline = c("num_devices", "is_p2plus", "is_newmarket", "baselin_ltv",
+               "baseline_viewing"),
+  exposure = "treatment",
+  outcome = "outcome_viewing",
+  segment_by = c("num_devices", "is_p2plus"),
+  treatment_cost = "cost",
+  cv_folds = 5L,
+  ps_learner = ps_learner_spec,
+  or_learner = or_learner_spec,
+  cate_learner = cate_learner_spec
+)
+print(sherlock_results)
+```
+In addition to the segment proportion in the population, its estimated CATE and
+associated confidence intervals and standard error, the default print out (or a
+call `attr(sherlock_results, "summary")` ) now also provides
+`avg_treatment_cost`, which is the average treatment cost $Cost(v)$ of treating
+a unit in each segment.
+
+Note that the cost constraint of "average cost per population unit" is expressed
+in terms of `avg_treatment_cost*segment_proportion` $=Cost(v)p(v)$:
+```{r examples of average treatment cost per population unit}
+## if treating all units, then the average cost per population unit is 2.687:
+attr(sherlock_results, "summary") %>%
+  summarize(sum(avg_treatment_cost * segment_proportion))
+
+# if treating only those with cate > 0, then the average cost is 1.44:
+attr(sherlock_results, "summary") %>%
+  filter(cate > 0) %>%
+  summarize(sum(avg_treatment_cost * segment_proportion))
+```
+Whenever we choose not to treat certain segments, those units incur 0 cost.
+Thus, the average cost per population unit is lowered.
+
+To find the segments to treat, we will again use the segmentation function `cost_knapsack()`. The argument
+`use_segment_treatment_cost=TRUE` specifies the `avg_treatment_cost` per segment
+($Cost(v)$) must be used in conjunction with `segment_proportion` ($p(v)$), to
+evaluate the cost constraints. The argument `budget` specifies the cap on the
+average treatment cost per population unit: $\sum_{v\in T} Cost(v) p(v) \leq
+\text{budget}$. Similar to before, `type=inferential` means we use hypothesis
+testing to determine $CATE(v) > 0$.
+```{r }
+sherlock_results <- watson_segment(
+  sherlock_results,
+  segment_fun = cost_knapsack,
+  budget = 1,
+  use_segment_treatment_cost = TRUE,
+  type = "inferential"
+)
+print(sherlock_results)
+
+## constraint satisfied? resulting average cost per population unit:
+attr(sherlock_results,'summary') %>% filter(rule==1) %>%
+  summarize(sum(avg_treatment_cost*segment_proportion))
+```
+The resulting cost constraint would be satisfied if we followed this
+segment-rule based strategy. We also saw earlier that if we treated all units
+the resulting cost per unit would be ~ 2.69.
+
+In addition to lower cost, the segment-rule based strategy also yields better
+metric outcome, compared to treating all units:
+```{r }
+mycroft_assess(
+  sherlock_results,
+  param_type = "ote"
+) %>% print
+```
+
+# Appendix: The methodology behind `sherlock` {-}
+
+Let
+* $A$ = treatment, 0 for control, 1 treatment. Consider binary for now.
+* $Y$ = metric of interest. Continuous or binary.
+* $W$ = baseline covariates. These include covariates used to adjust for
+confounder bias (if non-AB) and/or to reduce variance. May be continuous or
+discrete.
+* $V\subseteq W$ = a set of segment dimensions/covariates, and $\mathcal{V}$
+its outcome space. A realization $V=v$ represents a segment of users.
+* For a segment $V=v$, $CATE(v) = E[E(Y|A=1,W)-E(Y|A=0,W)|V=v)]$ is the
+**Conditional Average Treatment Effect (CATE)** on this segment.
+
+We want to know which segments of users would benefit from treatment. This
+benefit can be:
+
+a. In absolute terms. Specifically, the goal here is to identify segments
+$T=\{v\in\mathcal{V}: CATE(v) > \text{threshold}\}$ for some user-specified
+benefit threshold.
+b. Subject to cost or side-effects constraints. This can be formulated in
+terms of a constrained optimization with respect to CATE: Identify segments
+$T\subseteq \mathcal{V}$ so to maximize $$\phi= \sum_{v \in T} E[  E(Y|A=1, W)
+| V= v] p(v) +\sum_{v \notin T} E[  E(Y|A=0, W) | V= v]p(v)$$ subject to the
+constraint $\sum_{v \in T} Cost(v) p(v) \leq \text{budget}$, where the cost
+function $Cost(v)\geq 0$ and the $\text{budget}$ constraint are
+user-specified. In other words, we seek to learn the 'should-treat' segments
+$T$, such that if we were to treat the population based on whether or not they
+belong to any of these segments in $T$, then the resulting population-level
+outcome $\phi$ is maximized, while the average cost per population unit is
+capped at the desired level.  This can be reformulated in terms of the
+*knapsack problem* of finding $T\subseteq \{v: CATE(v)>0\}$ which maximizes
+$\phi_2=\sum_{v\in V} CATE(v)$ subject to the constraint $\sum_{v \in T}
+Cost(v) p(v) \leq \text{budget}$.  
+
+<!-- 2. How do we quantify the HTE across the segments? We consider this a
+separate but related question to segment discovery, where one wishes to
+quantify HTE across the segments defined by a given set of segment dimensions.
+We can formulate this as learning a two-set partition of $\mathcal{V}$ to
+maximize $HTE= \sum_{v \in T} CATE(v) p(v) -  \sum_{v \notin T} CATE(v) p(v)$.
+In other words, it learns the maximal HTE range across the segments given by
+these dimensions.-->
+
+Both of these questions can be framed in terms of classifying the segments based
+on some criterion on their CATE. Thus we largely divided the package into 3
+modular tasks:
+
+1. `sherlock_calculate`: Estimating CATE.
+2. `watson_segment`: Learning the segmentation (i.e., which segments to
+treat).
+3. `mycroft_assess`: Evaluating the effectiveness of the resulting segmentation.
+
+The CATE and the effectiveness measures are implemented using sample splitting
+principles in CVTMLE (@wzheng10, @vdL15).
+
+In `sherlock_calculate`: To estimate CATE, we first apply machine learning
+methods chosen by the user and sample splitting principles in CV-TMLE to
+estimate the outcome regression $E(Y|A,W)$ and the propensity score $p(A|W)$ (if
+non-AB data). Then, we use these nuisance parameter estimates to perform a
+double robust outcome transformation $D=\frac{2A-1}{p(A|W)}[Y-E(Y|A,W)] +
+E(Y|1,W)-E(Y|0,W)$. We then regress this $D$ onto the segment dimensions $V$
+using machine learning. This regression $E(D|V)$ allows us to compute
+out-of-sample double robust estimates of $CATE(V)$, and the associated standard
+errors. 
+
+In `watson_segment`: The two classes of segment discovery problems require a
+determination of whether a segment $v$ satisfies $CATE(v) > \delta$ for some
+constant $\delta$. In problem a, $\delta$ is the threshold given by the user. In
+problem b, $\delta=0$. By default, we implement this segment classification as
+an upper tail hypothesis testing problem (H1: $CATE(v) > \delta$; H0: $CATE(v)
+\leq \delta$), controlling for false discovery rate in the multiple comparisons
+across the segments. For the cost constrained problems, the `knapsack` algorithm
+is applied on the segments that were determined to have $CATE(v)>0$.  
+
+In `mycroft_assess`: Once we learn this segmentation of the population into $T$
+and its complement, we can evaluate how effectively it has achieved the
+segmentation goal. For example, we can estimate the population-level outcome
+under the optimal segment-rule treatment strategy. Specifically, this parameter
+is $\psi_d = E[ E(Y|A=d(V), W)]$, where $d(v) = I(v \in T)$ assigns treatment to
+segments in $T$, and assigns control otherwise. $E(Y|A=d(V),W)$ is the expected
+outcome in an individual if they followed their segment's optimal treatment
+rule, and $E[E(Y|A=d(V), W)]$ is averaged over the population. $\psi_d$ can be
+contrasted with $\psi_1 = E[E(Y|A=1, W)]$, the population outcome if all receive
+treatment, and $\psi_0 = E[E(Y|A=0, W)]$, the population outcome if all receive
+control. $\psi_d-\psi_1$ and $\psi_d-\psi_0$ are both valid Optimal Treatment
+Effects, depending on what we consider as reference strategy. These are
+implemented in `mycroft_assess` with `param_type=ote`. Alternatively, we can
+consider treatment effects on the learn segment groups. $\mu_{all} = E[ E(Y|A=1,
+W) - E(Y|A=0, W) ]$ is the average treatment effect (treatment-all vs
+control-all) on the whole population. Similarly, $\mu_{1} = E[ E(Y|A=1, W) -
+E(Y|A=0, W) | V \in T]$ and $\mu_{0} = E[ E(Y|A=1, W) - E(Y|A=0, W) | V \notin
+T]$ are the average treatment effects among segments that are recommended
+treatment ($v\in T$) and those that are not recommended ($v\notin T$). And we
+can also contrast the HTE in these two segment groups $\mu_{1}-\mu_{0}$. These
+are implemented in `mycroft_assess` with `param_type=hte`.
+
+## Assumptions and data requirements
+
+We make two standard assumptions in causal inference:
+
+* There is sufficient variability of the treatment and control within each
+subgroup defined by the baseline covariates and by the segment dimensions.
+This means that we do not have a subgroup of users that rarely or never
+receive a specific treatment category.
+
+* Inferring causal effects outside of AB experiments rely on strong causal
+assumptions. For non-AB data, we make the standard implicit causal assumption
+that the data captures all the common causes between a unit's treatment and
+the outcome of interest.
+
+Specific to the methodology we implemented, we also require each segment to have
+a moderate number of observations in the data (> 50). This is to ensure that we
+can provide a standard error for CATE on each segment. In the absence of this
+requirement, we can still obtain point estimates of CATE and learn a desired
+segmentation, but would be unable to provide reliable statistical inference on
+CATE.
+
+# References
+

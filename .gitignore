@@ -1,0 +1,9 @@
+.Rhistory
+.RData
+.Rproj.user
+.ipynb_checkpoints
+*_cache/*
+inst/doc
+doc
+Meta
+README.html

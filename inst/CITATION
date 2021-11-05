@@ -1,0 +1,26 @@
+citHeader("Please cite the following works when using the 'sherlock' software
+           package, including both the software tool and the article describing
+           the statistical methodology.")
+
+year <- format(Sys.Date(), "%Y")
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+         title = "sherlock: Causal Machine Learning for Segment Discovery and Analysis",
+         author = c(person("Nima", "Hejazi", "S"),
+                    person("Wenjing", "Zheng")),
+         year = year,
+         note = note,
+         doi = "",
+         url = "https://github.com/Netflix/sherlock")
+
+bibentry(bibtype = "Article",
+         title = "A framework for causal segmentation analysis with machine learning in large-scale digital experiments",
+         author = c(person("Nima", "Hejazi", "S"),
+                    person("Wenjing", "Zheng"),
+                    person("Sathya", "Anand")),
+         year = "2021",
+         journal = "Conference on Digital Experimentation at MIT",
+         volume = "8th annual",
+         publisher = "MIT Press",
+         url = "https://arxiv.org/abs/2111.01223")

@@ -1,0 +1,57 @@
+Package: sherlock
+Title: Causal Machine Learning for Segment Discovery and Analysis
+Version: 0.2.0
+Authors@R: c(
+    person("Nima", "Hejazi", email = "nh@nimahejazi.org",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7127-2789")),
+    person("Wenjing", "Zheng", email = "wzheng@netflix.com",
+           role = "aut",
+           comment = c(ORCID = "")),
+    person("Netflix, Inc.", role = c("fnd", "cph"))
+  )
+Maintainer: Nima Hejazi <nh@nimahejazi.org>
+Description: Population segment discovery and analysis using state-of-the-art,
+    doubly robust estimation techniques rooted in causal inference and machine
+    learning. Using data from randomized A/B experiments or quasi-experiments
+    (observational studies), a set of candidate segmentation variables are used
+    to discover segments of the study population based on estimated treatment
+    response heterogeneity, characterized by the conditional average treatment
+    effect.  Implemented procedures for estimation of the conditional average
+    treatment effect incorporate ensemble machine learning (or the user's
+    choice of regression algorithms) via the Super Learner ensemble modeling
+    procedure in 'sl3', available for download from GitHub using
+    'remotes::install_github("tlverse/sl3")'.
+Depends: R (>= 3.6.0)
+Imports:
+    stats,
+    data.table,
+    R6,
+    origami (>= 1.0.3),
+    sl3 (>= 1.4.3),
+    assertthat,
+    stringr,
+    tibble,
+    dplyr,
+    adagio,
+    Rsolnp,
+    ggplot2
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    covr,
+    conflicted,
+    speedglm,
+    ranger,
+    xgboost,
+    glmnet
+Remotes:
+    github::tlverse/sl3@devel
+License: Apache License (>= 2)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE, old_usage = TRUE, r6 = FALSE)
+RoxygenNote: 7.1.2
+Config/testthat/edition: 3
+VignetteBuilder: knitr
