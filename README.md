@@ -12,6 +12,7 @@ Status](https://img.shields.io/codecov/c/github/Netflix/sherlock/master.svg)](ht
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5652010.svg)](https://doi.org/10.5281/zenodo.5652010)
 <!-- badges: end -->
 
 > Causal Machine Learning for Population Segment Discovery and Analysis
@@ -86,6 +87,7 @@ After using the `sherlock` R package, please cite the following:
         and analysis},
       year  = {2021},
       note = {R package version 0.2.0},
+      doi = {10.5281/zenodo.5652010},
       url = {https://github.com/Netflix/sherlock}
     }
 

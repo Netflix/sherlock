@@ -11,7 +11,7 @@ bibentry(bibtype = "Manual",
                     person("Wenjing", "Zheng")),
          year = year,
          note = note,
-         doi = "",
+         doi = "10.5281/zenodo.5652010",
          url = "https://github.com/Netflix/sherlock")
 
 bibentry(bibtype = "Article",

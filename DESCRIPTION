@@ -7,7 +7,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-7127-2789")),
     person("Wenjing", "Zheng", email = "wzheng@netflix.com",
            role = "aut",
-           comment = c(ORCID = "")),
+           comment = c(ORCID = "0000-0002-6584-1359")),
     person("Netflix, Inc.", role = c("fnd", "cph"))
   )
 Maintainer: Nima Hejazi <nh@nimahejazi.org>
