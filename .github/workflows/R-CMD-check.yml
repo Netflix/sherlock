@@ -49,7 +49,7 @@ jobs:
           sudo apt install -y curl libcurl4-doc libcurl4-openssl-dev
       - name: Install package dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck", "covr", "sessioninfo"))
+          install.packages(c("remotes", "rcmdcheck", "covr", "sessioninfo", "igraph"))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github(c("tlverse/sl3@devel"))
         shell: Rscript {0}
@@ -57,7 +57,7 @@ jobs:
       - name: Check package
         run: |
           options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = "--ignore-vignettes", build_args = "--no-build-vignettes", error_on = "error")
+          rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
 
       - name: Upload code coverage
