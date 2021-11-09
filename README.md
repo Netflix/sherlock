@@ -40,10 +40,12 @@ incorporating state-of-the-art ensemble machine learning (van der Laan,
 Polley, and Hubbard 2007; Coyle et al. 2021) in the estimation
 procedure.
 
-For background and details on using `sherlock`, see the package
-vignette. For an overview of the statistical methodology, see our
-[conference manuscript](https://arxiv.org/abs/2111.01223) (Hejazi,
-Zheng, and Anand 2021) from [CODE @ MIT
+For background and details on using `sherlock`, see the [package
+vignette](https://netflix.github.io/sherlock/articles/sherlock_quick_start_netflix.html)
+and the [documentation site](https://netflix.github.io/sherlock/). An
+overview of the statistical methodology is available in our [conference
+manuscript](https://arxiv.org/abs/2111.01223) (Hejazi, Zheng, and Anand
+2021) from [CODE @ MIT
 2021](https://ide.mit.edu/events/2021-conference-on-digital-experimentation-mit-codemit/).
 
 -----

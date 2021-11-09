@@ -46,8 +46,10 @@ nonparametric, doubly robust framework [@vanderweele19; @vdL15; @Luedtke16a;
 @Luedtke16b], incorporating state-of-the-art ensemble machine learning
 [@vdl2007super; @coyle2021sl3] in the estimation procedure.
 
-For background and details on using `sherlock`, see the package vignette.  For
-an overview of the statistical methodology, see our [conference
+For background and details on using `sherlock`, see the [package
+vignette](https://netflix.github.io/sherlock/articles/sherlock_quick_start_netflix.html)
+and the [documentation site](https://netflix.github.io/sherlock/). An overview
+of the statistical methodology is available in our [conference
 manuscript](https://arxiv.org/abs/2111.01223) [@hejazi2021framework] from [CODE
 @ MIT
 2021](https://ide.mit.edu/events/2021-conference-on-digital-experimentation-mit-codemit/).

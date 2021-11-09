@@ -289,16 +289,16 @@ two sets. -->
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sherlock_results</span><span class="op">)</span>
 <span class="co">#&gt;     num_devices is_p2plus segment_proportion    cate   lwr_ci  upr_ci std_err</span>
-<span class="co">#&gt;  1:           1         0             0.0392  0.2276  0.04807  0.4071 0.09159</span>
-<span class="co">#&gt;  2:           1         1             0.0862  1.9094  1.79907  2.0197 0.05629</span>
-<span class="co">#&gt;  3:           2         0             0.0718 -0.6080 -0.73109 -0.4849 0.06281</span>
-<span class="co">#&gt;  4:           2         1             0.1752  2.5473  2.47101  2.6235 0.03891</span>
-<span class="co">#&gt;  5:           3         0             0.0764 -1.4581 -1.57710 -1.3390 0.06074</span>
-<span class="co">#&gt;  6:           3         1             0.1796  3.3866  3.30491  3.4682 0.04166</span>
-<span class="co">#&gt;  7:           4         0             0.0728  4.2903  4.16778  4.4128 0.06251</span>
-<span class="co">#&gt;  8:           4         1             0.1814 -2.2065 -2.28349 -2.1296 0.03926</span>
-<span class="co">#&gt;  9:           5         0             0.0328  5.0104  4.79779  5.2231 0.10850</span>
-<span class="co">#&gt; 10:           5         1             0.0846 -2.8414 -2.96196 -2.7208 0.06152</span></code></pre></div>
+<span class="co">#&gt;  1:           1         0             0.0392  0.2432  0.06118  0.4252 0.09286</span>
+<span class="co">#&gt;  2:           1         1             0.0862  1.8944  1.78646  2.0024 0.05509</span>
+<span class="co">#&gt;  3:           2         0             0.0718 -0.6053 -0.72942 -0.4812 0.06333</span>
+<span class="co">#&gt;  4:           2         1             0.1752  2.5508  2.47506  2.6265 0.03863</span>
+<span class="co">#&gt;  5:           3         0             0.0764 -1.4620 -1.58053 -1.3434 0.06050</span>
+<span class="co">#&gt;  6:           3         1             0.1796  3.3903  3.30814  3.4724 0.04190</span>
+<span class="co">#&gt;  7:           4         0             0.0728  4.3153  4.19349  4.4371 0.06214</span>
+<span class="co">#&gt;  8:           4         1             0.1814 -2.2125 -2.28816 -2.1369 0.03859</span>
+<span class="co">#&gt;  9:           5         0             0.0328  5.0961  4.87242  5.3197 0.11411</span>
+<span class="co">#&gt; 10:           5         1             0.0846 -2.8779 -3.00315 -2.7528 0.06388</span></code></pre></div>
 <p>We can visualize the CATE estimation results from <code>sherlock_calculate</code> as follows:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sherlock_results</span>, plot_type <span class="op">=</span> <span class="st">"cate"</span><span class="op">)</span></code></pre></div>
@@ -326,27 +326,27 @@ two sets. -->
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sherlock_results</span><span class="op">)</span>
 <span class="co">#&gt;     num_devices is_p2plus segment_proportion    cate   lwr_ci  upr_ci std_err</span>
-<span class="co">#&gt;  1:           1         0             0.0392  0.2276  0.04807  0.4071 0.09159</span>
-<span class="co">#&gt;  2:           1         1             0.0862  1.9094  1.79907  2.0197 0.05629</span>
-<span class="co">#&gt;  3:           2         0             0.0718 -0.6080 -0.73109 -0.4849 0.06281</span>
-<span class="co">#&gt;  4:           2         1             0.1752  2.5473  2.47101  2.6235 0.03891</span>
-<span class="co">#&gt;  5:           3         0             0.0764 -1.4581 -1.57710 -1.3390 0.06074</span>
-<span class="co">#&gt;  6:           3         1             0.1796  3.3866  3.30491  3.4682 0.04166</span>
-<span class="co">#&gt;  7:           4         0             0.0728  4.2903  4.16778  4.4128 0.06251</span>
-<span class="co">#&gt;  8:           4         1             0.1814 -2.2065 -2.28349 -2.1296 0.03926</span>
-<span class="co">#&gt;  9:           5         0             0.0328  5.0104  4.79779  5.2231 0.10850</span>
-<span class="co">#&gt; 10:           5         1             0.0846 -2.8414 -2.96196 -2.7208 0.06152</span>
+<span class="co">#&gt;  1:           1         0             0.0392  0.2432  0.06118  0.4252 0.09286</span>
+<span class="co">#&gt;  2:           1         1             0.0862  1.8944  1.78646  2.0024 0.05509</span>
+<span class="co">#&gt;  3:           2         0             0.0718 -0.6053 -0.72942 -0.4812 0.06333</span>
+<span class="co">#&gt;  4:           2         1             0.1752  2.5508  2.47506  2.6265 0.03863</span>
+<span class="co">#&gt;  5:           3         0             0.0764 -1.4620 -1.58053 -1.3434 0.06050</span>
+<span class="co">#&gt;  6:           3         1             0.1796  3.3903  3.30814  3.4724 0.04190</span>
+<span class="co">#&gt;  7:           4         0             0.0728  4.3153  4.19349  4.4371 0.06214</span>
+<span class="co">#&gt;  8:           4         1             0.1814 -2.2125 -2.28816 -2.1369 0.03859</span>
+<span class="co">#&gt;  9:           5         0             0.0328  5.0961  4.87242  5.3197 0.11411</span>
+<span class="co">#&gt; 10:           5         1             0.0846 -2.8779 -3.00315 -2.7528 0.06388</span>
 <span class="co">#&gt;     threshold test_stat       pval   pval_adj rule</span>
-<span class="co">#&gt;  1:         0     2.485  6.481e-03  1.080e-02    1</span>
-<span class="co">#&gt;  2:         0    33.920 1.681e-252 3.363e-252    1</span>
-<span class="co">#&gt;  3:         0    -9.680  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  4:         0    65.465  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt;  5:         0   -24.005  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  6:         0    81.299  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt;  7:         0    68.635  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt;  8:         0   -56.203  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  9:         0    46.179  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt; 10:         0   -46.187  1.000e+00  1.000e+00    0</span></code></pre></div>
+<span class="co">#&gt;  1:         0     2.619  4.412e-03  7.353e-03    1</span>
+<span class="co">#&gt;  2:         0    34.386 2.039e-259 4.077e-259    1</span>
+<span class="co">#&gt;  3:         0    -9.558  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  4:         0    66.025  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt;  5:         0   -24.165  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  6:         0    80.916  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt;  7:         0    69.450  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt;  8:         0   -57.335  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  9:         0    44.659  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt; 10:         0   -45.054  1.000e+00  1.000e+00    0</span></code></pre></div>
 <p>We can visualize the treatment decisions from <code>watson_segment</code> as follows:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sherlock_results</span>, plot_type <span class="op">=</span> <span class="st">"treatment_decisions"</span><span class="op">)</span></code></pre></div>
@@ -366,35 +366,35 @@ two sets. -->
 <span class="co"># friendly print out</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ote_example</span><span class="op">)</span>
 <span class="co">#&gt; Counterfactual Mean Outcome If All Get Treatment</span>
-<span class="co">#&gt;   Parameter Estimate:  2.183 </span>
-<span class="co">#&gt;   95% Conf Interval: (2.103, 2.264) </span>
-<span class="co">#&gt;   Standard Error:  0.04094 </span>
+<span class="co">#&gt;   Parameter Estimate:  2.181 </span>
+<span class="co">#&gt;   95% Conf Interval: (2.101, 2.261) </span>
+<span class="co">#&gt;   Standard Error:  0.04085 </span>
 <span class="co">#&gt; Counterfactual Mean Outcome If All Get Control</span>
-<span class="co">#&gt;   Parameter Estimate:  1.271 </span>
-<span class="co">#&gt;   95% Conf Interval: (1.241, 1.302) </span>
-<span class="co">#&gt;   Standard Error:  0.01546 </span>
+<span class="co">#&gt;   Parameter Estimate:  1.273 </span>
+<span class="co">#&gt;   95% Conf Interval: (1.243, 1.304) </span>
+<span class="co">#&gt;   Standard Error:  0.01544 </span>
 <span class="co">#&gt; Counterfactual Mean Outcome If Treat Based on Segment Rule</span>
 <span class="co">#&gt;   Parameter Estimate:  2.999 </span>
-<span class="co">#&gt;   95% Conf Interval: (2.942, 3.055) </span>
-<span class="co">#&gt;   Standard Error:  0.02881 </span>
+<span class="co">#&gt;   95% Conf Interval: (2.943, 3.055) </span>
+<span class="co">#&gt;   Standard Error:  0.02868 </span>
 <span class="co">#&gt; Optimal Treatment Effect: Treat based on Segment Rule vs. All Get Treatment</span>
-<span class="co">#&gt;   Parameter Estimate:  0.8152 </span>
-<span class="co">#&gt;   95% Conf Interval: (0.7783, 0.852) </span>
-<span class="co">#&gt;   Standard Error:  0.0188 </span>
+<span class="co">#&gt;   Parameter Estimate:  0.8176 </span>
+<span class="co">#&gt;   95% Conf Interval: (0.7805, 0.8546) </span>
+<span class="co">#&gt;   Standard Error:  0.01889 </span>
 <span class="co">#&gt; Optimal Treatment Effect: Treat based on Segment Rule vs All Get Control</span>
-<span class="co">#&gt;   Parameter Estimate:  1.727 </span>
-<span class="co">#&gt;   95% Conf Interval: (1.674, 1.781) </span>
-<span class="co">#&gt;   Standard Error:  0.02729</span>
+<span class="co">#&gt;   Parameter Estimate:  1.725 </span>
+<span class="co">#&gt;   95% Conf Interval: (1.672, 1.779) </span>
+<span class="co">#&gt;   Standard Error:  0.02727</span>
 
 <span class="co"># tabular print out</span>
 <span class="va">ote_example</span> <span class="op">%&gt;%</span>
   <span class="fu">as.data.table</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;                      param  estimate    lwr_ci    upr_ci    std_err</span>
-<span class="co">#&gt; 1:             tsm_trt_all 2.1834466 2.1032112 2.2636819 0.04093715</span>
-<span class="co">#&gt; 2:             tsm_ctl_all 1.2714350 1.2411414 1.3017286 0.01545621</span>
-<span class="co">#&gt; 3:            tsm_trt_rule 2.9986003 2.9421272 3.0550733 0.02881330</span>
-<span class="co">#&gt; 4: ate_trt_rule_vs_trt_all 0.8151537 0.7783017 0.8520057 0.01880237</span>
-<span class="co">#&gt; 5: ate_trt_rule_vs_ctl_all 1.7271653 1.6736818 1.7806488 0.02728800</span></code></pre></div>
+<span class="co">#&gt; 1:             tsm_trt_all 2.1812438 2.1011875 2.2613002 0.04084581</span>
+<span class="co">#&gt; 2:             tsm_ctl_all 1.2734885 1.2432277 1.3037493 0.01543945</span>
+<span class="co">#&gt; 3:            tsm_trt_rule 2.9988009 2.9425926 3.0550092 0.02867822</span>
+<span class="co">#&gt; 4: ate_trt_rule_vs_trt_all 0.8175571 0.7805243 0.8545898 0.01889459</span>
+<span class="co">#&gt; 5: ate_trt_rule_vs_ctl_all 1.7253124 1.6718692 1.7787555 0.02726742</span></code></pre></div>
 <p>The first 3 “Counterfactual Mean Outcome” parameters are the counterfactual mean outcome under the global ‘all get treatment’ strategy, ‘all get control’ strategy, and the targeted strategy of ‘treat based on segment rule’, where the segment rule was learned in step 2 using <code>watson_segment</code>. The last two “optimal treatment effect” parameters are the differences in outcome of the rule-based strategy vs the global ‘treat all’ and ‘control all’ strategies, respectively. These allow us to evaluate the gain in implementing the segment-rule based strategy, compared to a more convenient global strategy.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## "Heterogeneous Treatment Effect (HTE) Based on Segmentation"</span>
@@ -404,21 +404,21 @@ two sets. -->
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">hte_example</span><span class="op">)</span>
 <span class="co">#&gt; Average Treatment Effect (All Get Treatment vs All Get Control) on Population:</span>
-<span class="co">#&gt;   Parameter Estimate:  0.912 </span>
-<span class="co">#&gt;   95% Conf Interval: (0.8321, 0.9919) </span>
-<span class="co">#&gt;   Standard Error:  0.04076 </span>
+<span class="co">#&gt;   Parameter Estimate:  0.9078 </span>
+<span class="co">#&gt;   95% Conf Interval: (0.8278, 0.9877) </span>
+<span class="co">#&gt;   Standard Error:  0.0408 </span>
 <span class="co">#&gt; Average Treatment Effect on Segments with Recommended Treatment (Rule = 1)</span>
-<span class="co">#&gt;   Parameter Estimate:  2.948 </span>
-<span class="co">#&gt;   95% Conf Interval: (2.888, 3.008) </span>
-<span class="co">#&gt;   Standard Error:  0.03067 </span>
+<span class="co">#&gt;   Parameter Estimate:  2.945 </span>
+<span class="co">#&gt;   95% Conf Interval: (2.885, 3.005) </span>
+<span class="co">#&gt;   Standard Error:  0.03066 </span>
 <span class="co">#&gt; Average Treatment Effect on Segments with Recommended Controle (Rule = 0)</span>
-<span class="co">#&gt;   Parameter Estimate:  -1.968 </span>
-<span class="co">#&gt;   95% Conf Interval: (-2.029, -1.907) </span>
-<span class="co">#&gt;   Standard Error:  0.03107 </span>
+<span class="co">#&gt;   Parameter Estimate:  -1.974 </span>
+<span class="co">#&gt;   95% Conf Interval: (-2.035, -1.912) </span>
+<span class="co">#&gt;   Standard Error:  0.03129 </span>
 <span class="co">#&gt; Difference in Average Treatment Effect: Segments with Recommended Treatment vs Segments with Recommended Control </span>
-<span class="co">#&gt;   Parameter Estimate:  4.916 </span>
-<span class="co">#&gt;   95% Conf Interval: (4.831, 5.002) </span>
-<span class="co">#&gt;   Standard Error:  0.04365</span></code></pre></div>
+<span class="co">#&gt;   Parameter Estimate:  4.919 </span>
+<span class="co">#&gt;   95% Conf Interval: (4.833, 5.005) </span>
+<span class="co">#&gt;   Standard Error:  0.0438</span></code></pre></div>
 <p>The first 3 “Average Treatment Effect” parameters evaluate the average treatment effect (treat-all vs control-all), on the whole population, on the segments where treatment is recommended (<code>rule=1</code>), and on the segments where treatment is not recommended (<code>rule=0</code>). “Difference in ATE” parameter is the difference in Average Treatment Effect between the two segment groups (ATE on <code>rule==1</code> group vs ATE on <code>rule=0</code> group).</p>
 </div>
 </div>
@@ -437,27 +437,27 @@ two sets. -->
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sherlock_results</span><span class="op">)</span>
 <span class="co">#&gt;     num_devices is_p2plus segment_proportion    cate   lwr_ci  upr_ci std_err</span>
-<span class="co">#&gt;  1:           1         0             0.0392  0.2276  0.04807  0.4071 0.09159</span>
-<span class="co">#&gt;  2:           1         1             0.0862  1.9094  1.79907  2.0197 0.05629</span>
-<span class="co">#&gt;  3:           2         0             0.0718 -0.6080 -0.73109 -0.4849 0.06281</span>
-<span class="co">#&gt;  4:           2         1             0.1752  2.5473  2.47101  2.6235 0.03891</span>
-<span class="co">#&gt;  5:           3         0             0.0764 -1.4581 -1.57710 -1.3390 0.06074</span>
-<span class="co">#&gt;  6:           3         1             0.1796  3.3866  3.30491  3.4682 0.04166</span>
-<span class="co">#&gt;  7:           4         0             0.0728  4.2903  4.16778  4.4128 0.06251</span>
-<span class="co">#&gt;  8:           4         1             0.1814 -2.2065 -2.28349 -2.1296 0.03926</span>
-<span class="co">#&gt;  9:           5         0             0.0328  5.0104  4.79779  5.2231 0.10850</span>
-<span class="co">#&gt; 10:           5         1             0.0846 -2.8414 -2.96196 -2.7208 0.06152</span>
+<span class="co">#&gt;  1:           1         0             0.0392  0.2432  0.06118  0.4252 0.09286</span>
+<span class="co">#&gt;  2:           1         1             0.0862  1.8944  1.78646  2.0024 0.05509</span>
+<span class="co">#&gt;  3:           2         0             0.0718 -0.6053 -0.72942 -0.4812 0.06333</span>
+<span class="co">#&gt;  4:           2         1             0.1752  2.5508  2.47506  2.6265 0.03863</span>
+<span class="co">#&gt;  5:           3         0             0.0764 -1.4620 -1.58053 -1.3434 0.06050</span>
+<span class="co">#&gt;  6:           3         1             0.1796  3.3903  3.30814  3.4724 0.04190</span>
+<span class="co">#&gt;  7:           4         0             0.0728  4.3153  4.19349  4.4371 0.06214</span>
+<span class="co">#&gt;  8:           4         1             0.1814 -2.2125 -2.28816 -2.1369 0.03859</span>
+<span class="co">#&gt;  9:           5         0             0.0328  5.0961  4.87242  5.3197 0.11411</span>
+<span class="co">#&gt; 10:           5         1             0.0846 -2.8779 -3.00315 -2.7528 0.06388</span>
 <span class="co">#&gt;     threshold test_stat       pval   pval_adj rule</span>
-<span class="co">#&gt;  1:         0     2.485  6.481e-03  1.080e-02    0</span>
-<span class="co">#&gt;  2:         0    33.920 1.681e-252 3.363e-252    1</span>
-<span class="co">#&gt;  3:         0    -9.680  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  4:         0    65.465  0.000e+00  0.000e+00    0</span>
-<span class="co">#&gt;  5:         0   -24.005  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  6:         0    81.299  0.000e+00  0.000e+00    0</span>
-<span class="co">#&gt;  7:         0    68.635  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt;  8:         0   -56.203  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  9:         0    46.179  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt; 10:         0   -46.187  1.000e+00  1.000e+00    0</span></code></pre></div>
+<span class="co">#&gt;  1:         0     2.619  4.412e-03  7.353e-03    0</span>
+<span class="co">#&gt;  2:         0    34.386 2.039e-259 4.077e-259    1</span>
+<span class="co">#&gt;  3:         0    -9.558  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  4:         0    66.025  0.000e+00  0.000e+00    0</span>
+<span class="co">#&gt;  5:         0   -24.165  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  6:         0    80.916  0.000e+00  0.000e+00    0</span>
+<span class="co">#&gt;  7:         0    69.450  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt;  8:         0   -57.335  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  9:         0    44.659  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt; 10:         0   -45.054  1.000e+00  1.000e+00    0</span></code></pre></div>
 <p>As before, we can visualize the treatment decisions from <code>watson_segment</code> as follows:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sherlock_results</span>, plot_type <span class="op">=</span> <span class="st">"treatment_decisions"</span><span class="op">)</span></code></pre></div>
@@ -466,13 +466,13 @@ two sets. -->
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">sherlock_results</span>, <span class="st">"summary"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">rule</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="co">#&gt;    num_devices is_p2plus segment_proportion     cate   lwr_ci   upr_ci</span>
-<span class="co">#&gt; 1:           1         1             0.0862 1.909396 1.799068 2.019724</span>
-<span class="co">#&gt; 2:           4         0             0.0728 4.290297 4.167781 4.412812</span>
-<span class="co">#&gt; 3:           5         0             0.0328 5.010449 4.797790 5.223107</span>
-<span class="co">#&gt;       std_err threshold test_stat          pval      pval_adj rule</span>
-<span class="co">#&gt; 1: 0.05629092         0  33.92014 1.681335e-252 3.362669e-252    1</span>
-<span class="co">#&gt; 2: 0.06250893         0  68.63494  0.000000e+00  0.000000e+00    1</span>
-<span class="co">#&gt; 3: 0.10850133         0  46.17869  0.000000e+00  0.000000e+00    1</span>
+<span class="co">#&gt; 1:           1         1             0.0862 1.894438 1.786457 2.002419</span>
+<span class="co">#&gt; 2:           4         0             0.0728 4.315272 4.193489 4.437055</span>
+<span class="co">#&gt; 3:           5         0             0.0328 5.096079 4.872423 5.319735</span>
+<span class="co">#&gt;       std_err threshold test_stat         pval     pval_adj rule</span>
+<span class="co">#&gt; 1: 0.05509323         0  34.38604 2.03859e-259 4.07718e-259    1</span>
+<span class="co">#&gt; 2: 0.06213531         0  69.44959  0.00000e+00  0.00000e+00    1</span>
+<span class="co">#&gt; 3: 0.11411213         0  44.65852  0.00000e+00  0.00000e+00    1</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">sherlock_results</span>, <span class="st">"summary"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">rule</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">pull</span><span class="op">(</span><span class="va">segment_proportion</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -485,25 +485,25 @@ two sets. -->
   param_type <span class="op">=</span> <span class="st">"ote"</span>
 <span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">print</span>
 <span class="co">#&gt; Counterfactual Mean Outcome If All Get Treatment</span>
-<span class="co">#&gt;   Parameter Estimate:  2.183 </span>
-<span class="co">#&gt;   95% Conf Interval: (2.103, 2.264) </span>
-<span class="co">#&gt;   Standard Error:  0.04094 </span>
+<span class="co">#&gt;   Parameter Estimate:  2.181 </span>
+<span class="co">#&gt;   95% Conf Interval: (2.101, 2.261) </span>
+<span class="co">#&gt;   Standard Error:  0.04085 </span>
 <span class="co">#&gt; Counterfactual Mean Outcome If All Get Control</span>
-<span class="co">#&gt;   Parameter Estimate:  1.271 </span>
-<span class="co">#&gt;   95% Conf Interval: (1.241, 1.302) </span>
-<span class="co">#&gt;   Standard Error:  0.01546 </span>
+<span class="co">#&gt;   Parameter Estimate:  1.273 </span>
+<span class="co">#&gt;   95% Conf Interval: (1.243, 1.304) </span>
+<span class="co">#&gt;   Standard Error:  0.01544 </span>
 <span class="co">#&gt; Counterfactual Mean Outcome If Treat Based on Segment Rule</span>
-<span class="co">#&gt;   Parameter Estimate:  1.923 </span>
-<span class="co">#&gt;   95% Conf Interval: (1.872, 1.975) </span>
-<span class="co">#&gt;   Standard Error:  0.02625 </span>
+<span class="co">#&gt;   Parameter Estimate:  1.924 </span>
+<span class="co">#&gt;   95% Conf Interval: (1.873, 1.975) </span>
+<span class="co">#&gt;   Standard Error:  0.02615 </span>
 <span class="co">#&gt; Optimal Treatment Effect: Treat based on Segment Rule vs. All Get Treatment</span>
-<span class="co">#&gt;   Parameter Estimate:  -0.2602 </span>
-<span class="co">#&gt;   95% Conf Interval: (-0.3292, -0.1911) </span>
-<span class="co">#&gt;   Standard Error:  0.03524 </span>
+<span class="co">#&gt;   Parameter Estimate:  -0.2572 </span>
+<span class="co">#&gt;   95% Conf Interval: (-0.3264, -0.188) </span>
+<span class="co">#&gt;   Standard Error:  0.0353 </span>
 <span class="co">#&gt; Optimal Treatment Effect: Treat based on Segment Rule vs All Get Control</span>
-<span class="co">#&gt;   Parameter Estimate:  0.6519 </span>
-<span class="co">#&gt;   95% Conf Interval: (0.6086, 0.6951) </span>
-<span class="co">#&gt;   Standard Error:  0.02208</span></code></pre></div>
+<span class="co">#&gt;   Parameter Estimate:  0.6505 </span>
+<span class="co">#&gt;   95% Conf Interval: (0.6073, 0.6937) </span>
+<span class="co">#&gt;   Standard Error:  0.02204</span></code></pre></div>
 <p>The “Counterfactual Mean Outcome If Treat Based on Segment Rule” in this example is less than the corresponding one in example 1.</p>
 </div>
 <div id="example-3-finding-segments-that-should-receive-treatment-if-we-need-to-cap-the-average-treatment-cost-per-unit" class="section level3 unnumbered">
@@ -548,16 +548,16 @@ two sets. -->
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sherlock_results</span><span class="op">)</span>
 <span class="co">#&gt;     num_devices is_p2plus segment_proportion    cate  lwr_ci  upr_ci std_err</span>
-<span class="co">#&gt;  1:           1         0             0.0392  0.4202  0.1863  0.6542 0.11936</span>
-<span class="co">#&gt;  2:           1         1             0.0862  1.9959  1.8509  2.1410 0.07402</span>
-<span class="co">#&gt;  3:           2         0             0.0718 -0.4709 -0.6407 -0.3011 0.08663</span>
-<span class="co">#&gt;  4:           2         1             0.1752  2.8154  2.7124  2.9184 0.05255</span>
-<span class="co">#&gt;  5:           3         0             0.0764 -1.2384 -1.4045 -1.0722 0.08476</span>
-<span class="co">#&gt;  6:           3         1             0.1796  3.5527  3.4428  3.6627 0.05611</span>
-<span class="co">#&gt;  7:           4         0             0.0728  4.4947  4.3152  4.6741 0.09158</span>
-<span class="co">#&gt;  8:           4         1             0.1814 -2.0596 -2.1647 -1.9546 0.05360</span>
-<span class="co">#&gt;  9:           5         0             0.0328  5.5360  5.2730  5.7990 0.13417</span>
-<span class="co">#&gt; 10:           5         1             0.0846 -2.7538 -2.9083 -2.5993 0.07884</span>
+<span class="co">#&gt;  1:           1         0             0.0392  0.4187  0.1870  0.6504 0.11822</span>
+<span class="co">#&gt;  2:           1         1             0.0862  1.9987  1.8533  2.1440 0.07416</span>
+<span class="co">#&gt;  3:           2         0             0.0718 -0.4629 -0.6305 -0.2954 0.08548</span>
+<span class="co">#&gt;  4:           2         1             0.1752  2.8191  2.7154  2.9228 0.05290</span>
+<span class="co">#&gt;  5:           3         0             0.0764 -1.2363 -1.4031 -1.0695 0.08510</span>
+<span class="co">#&gt;  6:           3         1             0.1796  3.5541  3.4435  3.6648 0.05645</span>
+<span class="co">#&gt;  7:           4         0             0.0728  4.4860  4.3083  4.6636 0.09064</span>
+<span class="co">#&gt;  8:           4         1             0.1814 -2.0599 -2.1661 -1.9537 0.05418</span>
+<span class="co">#&gt;  9:           5         0             0.0328  5.4936  5.2327  5.7545 0.13312</span>
+<span class="co">#&gt; 10:           5         1             0.0846 -2.7343 -2.8902 -2.5784 0.07953</span>
 <span class="co">#&gt;     avg_treatment_cost</span>
 <span class="co">#&gt;  1:              1.384</span>
 <span class="co">#&gt;  2:              1.846</span>
@@ -596,27 +596,27 @@ two sets. -->
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sherlock_results</span><span class="op">)</span>
 <span class="co">#&gt;     num_devices is_p2plus segment_proportion    cate  lwr_ci  upr_ci std_err</span>
-<span class="co">#&gt;  1:           1         0             0.0392  0.4202  0.1863  0.6542 0.11936</span>
-<span class="co">#&gt;  2:           1         1             0.0862  1.9959  1.8509  2.1410 0.07402</span>
-<span class="co">#&gt;  3:           2         0             0.0718 -0.4709 -0.6407 -0.3011 0.08663</span>
-<span class="co">#&gt;  4:           2         1             0.1752  2.8154  2.7124  2.9184 0.05255</span>
-<span class="co">#&gt;  5:           3         0             0.0764 -1.2384 -1.4045 -1.0722 0.08476</span>
-<span class="co">#&gt;  6:           3         1             0.1796  3.5527  3.4428  3.6627 0.05611</span>
-<span class="co">#&gt;  7:           4         0             0.0728  4.4947  4.3152  4.6741 0.09158</span>
-<span class="co">#&gt;  8:           4         1             0.1814 -2.0596 -2.1647 -1.9546 0.05360</span>
-<span class="co">#&gt;  9:           5         0             0.0328  5.5360  5.2730  5.7990 0.13417</span>
-<span class="co">#&gt; 10:           5         1             0.0846 -2.7538 -2.9083 -2.5993 0.07884</span>
+<span class="co">#&gt;  1:           1         0             0.0392  0.4187  0.1870  0.6504 0.11822</span>
+<span class="co">#&gt;  2:           1         1             0.0862  1.9987  1.8533  2.1440 0.07416</span>
+<span class="co">#&gt;  3:           2         0             0.0718 -0.4629 -0.6305 -0.2954 0.08548</span>
+<span class="co">#&gt;  4:           2         1             0.1752  2.8191  2.7154  2.9228 0.05290</span>
+<span class="co">#&gt;  5:           3         0             0.0764 -1.2363 -1.4031 -1.0695 0.08510</span>
+<span class="co">#&gt;  6:           3         1             0.1796  3.5541  3.4435  3.6648 0.05645</span>
+<span class="co">#&gt;  7:           4         0             0.0728  4.4860  4.3083  4.6636 0.09064</span>
+<span class="co">#&gt;  8:           4         1             0.1814 -2.0599 -2.1661 -1.9537 0.05418</span>
+<span class="co">#&gt;  9:           5         0             0.0328  5.4936  5.2327  5.7545 0.13312</span>
+<span class="co">#&gt; 10:           5         1             0.0846 -2.7343 -2.8902 -2.5784 0.07953</span>
 <span class="co">#&gt;     threshold avg_treatment_cost test_stat       pval   pval_adj rule</span>
-<span class="co">#&gt;  1:         0              1.384     3.520  2.154e-04  3.590e-04    0</span>
-<span class="co">#&gt;  2:         0              1.846    26.965 1.882e-160 3.764e-160    1</span>
-<span class="co">#&gt;  3:         0              1.840    -5.436  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  4:         0              2.347    53.576  0.000e+00  0.000e+00    0</span>
-<span class="co">#&gt;  5:         0              2.340   -14.610  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  6:         0              2.835    63.321  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt;  7:         0              2.821    49.081  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt;  8:         0              3.329   -38.428  1.000e+00  1.000e+00    0</span>
-<span class="co">#&gt;  9:         0              3.296    41.260  0.000e+00  0.000e+00    1</span>
-<span class="co">#&gt; 10:         0              3.845   -34.928  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  1:         0              1.384     3.542  1.984e-04  3.307e-04    0</span>
+<span class="co">#&gt;  2:         0              1.846    26.951 2.785e-160 5.569e-160    1</span>
+<span class="co">#&gt;  3:         0              1.840    -5.415  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  4:         0              2.347    53.292  0.000e+00  0.000e+00    0</span>
+<span class="co">#&gt;  5:         0              2.340   -14.528  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  6:         0              2.835    62.960  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt;  7:         0              2.821    49.494  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt;  8:         0              3.329   -38.019  1.000e+00  1.000e+00    0</span>
+<span class="co">#&gt;  9:         0              3.296    41.270  0.000e+00  0.000e+00    1</span>
+<span class="co">#&gt; 10:         0              3.845   -34.379  1.000e+00  1.000e+00    0</span>
 
 <span class="co">## constraint satisfied? resulting average cost per population unit:</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">sherlock_results</span>,<span class="st">'summary'</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">rule</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -631,25 +631,25 @@ two sets. -->
   param_type <span class="op">=</span> <span class="st">"ote"</span>
 <span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">print</span>
 <span class="co">#&gt; Counterfactual Mean Outcome If All Get Treatment</span>
-<span class="co">#&gt;   Parameter Estimate:  2.266 </span>
-<span class="co">#&gt;   95% Conf Interval: (2.184, 2.349) </span>
-<span class="co">#&gt;   Standard Error:  0.04212 </span>
+<span class="co">#&gt;   Parameter Estimate:  2.268 </span>
+<span class="co">#&gt;   95% Conf Interval: (2.185, 2.35) </span>
+<span class="co">#&gt;   Standard Error:  0.04209 </span>
 <span class="co">#&gt; Counterfactual Mean Outcome If All Get Control</span>
-<span class="co">#&gt;   Parameter Estimate:  1.169 </span>
-<span class="co">#&gt;   95% Conf Interval: (1.138, 1.201) </span>
-<span class="co">#&gt;   Standard Error:  0.01596 </span>
+<span class="co">#&gt;   Parameter Estimate:  1.168 </span>
+<span class="co">#&gt;   95% Conf Interval: (1.137, 1.2) </span>
+<span class="co">#&gt;   Standard Error:  0.01598 </span>
 <span class="co">#&gt; Counterfactual Mean Outcome If Treat Based on Segment Rule</span>
-<span class="co">#&gt;   Parameter Estimate:  2.492 </span>
+<span class="co">#&gt;   Parameter Estimate:  2.493 </span>
 <span class="co">#&gt;   95% Conf Interval: (2.431, 2.554) </span>
-<span class="co">#&gt;   Standard Error:  0.03124 </span>
+<span class="co">#&gt;   Standard Error:  0.03127 </span>
 <span class="co">#&gt; Optimal Treatment Effect: Treat based on Segment Rule vs. All Get Treatment</span>
-<span class="co">#&gt;   Parameter Estimate:  0.2262 </span>
-<span class="co">#&gt;   95% Conf Interval: (0.1672, 0.2852) </span>
-<span class="co">#&gt;   Standard Error:  0.03011 </span>
+<span class="co">#&gt;   Parameter Estimate:  0.2248 </span>
+<span class="co">#&gt;   95% Conf Interval: (0.1657, 0.2839) </span>
+<span class="co">#&gt;   Standard Error:  0.03014 </span>
 <span class="co">#&gt; Optimal Treatment Effect: Treat based on Segment Rule vs All Get Control</span>
-<span class="co">#&gt;   Parameter Estimate:  1.323 </span>
-<span class="co">#&gt;   95% Conf Interval: (1.265, 1.381) </span>
-<span class="co">#&gt;   Standard Error:  0.02966</span></code></pre></div>
+<span class="co">#&gt;   Parameter Estimate:  1.324 </span>
+<span class="co">#&gt;   95% Conf Interval: (1.266, 1.382) </span>
+<span class="co">#&gt;   Standard Error:  0.02968</span></code></pre></div>
 </div>
 </div>
 </div>
