@@ -1,0 +1,7 @@
+pandoc: '2.5'
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  sherlock_quick_start_netflix: sherlock_quick_start_netflix.html
+last_built: 2021-11-09T22:38Z
+
